@@ -2,13 +2,18 @@ package com.udacity.jdnd.course3.critter.entity;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 
 @Entity
 public class Schedule {
@@ -33,6 +38,10 @@ public class Schedule {
       inverseJoinColumns = { @JoinColumn(name = "pet_id")}
     )
     private List<Pet> pets;
+
+    @ElementCollection(targetClass = EmployeeSkill.class)
+    @Enumerated(EnumType.STRING)
+    private Set<EmployeeSkill> activities;
 
     public Long getId() {
         return id;
@@ -64,5 +73,13 @@ public class Schedule {
 
     public void setPets(List<Pet> pets) {
         this.pets = pets;
+    }
+
+    public Set<EmployeeSkill> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(Set<EmployeeSkill> activities) {
+        this.activities = activities;
     }
 }

@@ -5,7 +5,6 @@ import java.util.Optional;
 import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,4 +33,7 @@ public class PetService {
         return petRepository.findPetsByOwnerId(ownerId);
     }
     
+    public List<Pet> findAllByIds(List<Long> ids) {
+        return petRepository.findAllById(ids);
+    }
 }

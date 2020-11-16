@@ -31,8 +31,7 @@ public class Pet {
     @ManyToMany(mappedBy = "pets", fetch = FetchType.LAZY)
     private List<Schedule> schedules;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    // @JoinColumn(name="owner_id", nullable=false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name="owner_id")
     private Customer customer;
 
