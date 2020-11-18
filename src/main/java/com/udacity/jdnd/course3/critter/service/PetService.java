@@ -13,8 +13,13 @@ public class PetService {
     @Autowired
     private PetRepository petRepository;
 
+    @Autowired
+    private UserService userService;
+
     public Pet save(Pet pet) {
-        return petRepository.save(pet);
+        pet = petRepository.save(pet);
+        userService.addPetToCustomer(pet,pet.getOwner());
+        return pet;
     }
 
     public Pet findById(Long petId) {

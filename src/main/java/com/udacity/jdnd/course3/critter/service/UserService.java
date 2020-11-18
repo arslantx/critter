@@ -2,14 +2,17 @@ package com.udacity.jdnd.course3.critter.service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Employee;
+import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.entity.User;
+import com.udacity.jdnd.course3.critter.enums.EmployeeSkill;
 import com.udacity.jdnd.course3.critter.repository.UserRepository;
-import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,10 +52,24 @@ public class UserService {
     }
 
     public List<Employee> findEmployeeForService(Set<EmployeeSkill> skills, LocalDate date) {
-        return userRepository.findEmployeeForService(skills, date.getDayOfWeek());
+        List<Employee> employees = userRepository.findByDaysAvailableContaining(date.getDayOfWeek());
+        return employees.stream()
+                .filter(e -> e.getSkills().containsAll(skills)).collect(Collectors.toList());
     }
 
     public Customer findCustomerByPet(Long petId) {
-        return userRepository.findDistinctByPetsId(petId);
+        return userRepository.findByPetsId(petId);
+    }
+
+    public void addPetToCustomer(Pet pet, Customer customer) {
+        Set<Pet> pets = customer.getPets();
+        if (pets != null)
+            pets.add(pet);
+        else {
+            pets = new HashSet<>();
+            pets.add(pet);
+        }
+        customer.setPets(pets);
+        userRepository.save(customer);
     }
 }

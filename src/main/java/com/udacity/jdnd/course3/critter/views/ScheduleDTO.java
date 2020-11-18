@@ -1,10 +1,9 @@
-package com.udacity.jdnd.course3.critter.schedule;
-
-import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
+package com.udacity.jdnd.course3.critter.views;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import com.udacity.jdnd.course3.critter.enums.EmployeeSkill;
 
 /**
  * Represents the form that schedule request and response data takes. Does not map
@@ -47,5 +46,13 @@ public class ScheduleDTO {
 
     public void setActivities(Set<EmployeeSkill> activities) {
         this.activities = activities;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

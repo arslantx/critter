@@ -1,4 +1,4 @@
-package com.udacity.jdnd.course3.critter.pet;
+package com.udacity.jdnd.course3.critter.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.exceptions.NotFoundException;
 import com.udacity.jdnd.course3.critter.service.PetService;
 import com.udacity.jdnd.course3.critter.service.UserService;
+import com.udacity.jdnd.course3.critter.views.PetDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,13 +58,18 @@ public class PetController {
         return convertPetListToDTOList(pets);
     }
 
-    // DTO conversion methods only beyond this line
+
+    /**
+     * DTO converters only beyond this line
+     * 
+     */
+    
     private Pet convertDTOToPet(PetDTO petDTO) {
         Pet pet = new Pet();
         BeanUtils.copyProperties(petDTO, pet);
         if (petDTO.getOwnerId() != 0L) {
             Customer customer = userService.findById(petDTO.getOwnerId());
-            pet.setCustomer(customer);
+            pet.setOwner(customer);
         }
         return pet;
     }
@@ -71,8 +77,8 @@ public class PetController {
     private PetDTO convertPetToDTO(Pet pet) {
         PetDTO petDTO = new PetDTO();
         BeanUtils.copyProperties(pet, petDTO);
-        if (pet.getCustomer() != null) {
-            petDTO.setOwnerId(pet.getCustomer().getId());
+        if (pet.getOwner() != null) {
+            petDTO.setOwnerId(pet.getOwner().getId());
         }
         return petDTO;
     }

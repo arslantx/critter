@@ -1,4 +1,4 @@
-package com.udacity.jdnd.course3.critter.user;
+package com.udacity.jdnd.course3.critter.controller;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -7,9 +7,11 @@ import java.util.Set;
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.entity.Pet;
-import com.udacity.jdnd.course3.critter.entity.User;
 import com.udacity.jdnd.course3.critter.exceptions.NotFoundException;
 import com.udacity.jdnd.course3.critter.service.UserService;
+import com.udacity.jdnd.course3.critter.views.CustomerDTO;
+import com.udacity.jdnd.course3.critter.views.EmployeeDTO;
+import com.udacity.jdnd.course3.critter.views.EmployeeRequestDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +44,6 @@ public class UserController {
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        // List<Customer> customerList = userService.findAllCustomers();
         List<Customer> customerList = userService.findAllUsers();
         return convertCustomerToDTO(customerList);
     }
@@ -74,7 +75,6 @@ public class UserController {
         userService.setEmployeeAvailability(employeeId, daysAvailable);
     }
 
-    //TODO: complete this
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
         List<Employee> employees = userService.findEmployeeForService(employeeDTO.getSkills(), employeeDTO.getDate());
@@ -82,7 +82,11 @@ public class UserController {
     }
 
 
-    // DTO converters only beyond this line
+    /**
+     * DTO converters only beyond this line
+     * 
+     */
+
     private List<CustomerDTO> convertCustomerToDTO(List<Customer> customers) {
         List<CustomerDTO> customerDTOs = new ArrayList<>();
         for (Customer customer : customers) {

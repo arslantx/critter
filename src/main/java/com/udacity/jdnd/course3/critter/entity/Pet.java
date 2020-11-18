@@ -1,8 +1,9 @@
 package com.udacity.jdnd.course3.critter.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,7 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import com.udacity.jdnd.course3.critter.pet.PetType;
+import com.udacity.jdnd.course3.critter.enums.PetType;
+import org.hibernate.annotations.Nationalized;
+import org.hibernate.annotations.Type;
 
 @Entity
 public class Pet {
@@ -21,8 +24,15 @@ public class Pet {
     @GeneratedValue
     private Long id;
 
+    @Nationalized
+    @Column(length = 100)
     private String name;
-    private LocalDateTime birthDate;
+
+    @Column(length = 30)
+    private LocalDate birthDate;
+
+    @Type(type = "nstring")
+    @Column(length = 500)
     private String notes;
     
     @Enumerated(EnumType.STRING)
@@ -33,7 +43,7 @@ public class Pet {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name="owner_id")
-    private Customer customer;
+    private Customer owner;
 
     public Long getId() {
         return id;
@@ -51,11 +61,11 @@ public class Pet {
         this.name = name;
     }
 
-    public LocalDateTime getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDateTime birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -75,12 +85,12 @@ public class Pet {
         this.schedules = schedules;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public Customer getOwner() {
+        return owner;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setOwner(Customer customer) {
+        this.owner = customer;
     }
 
     public String getNotes() {
@@ -89,5 +99,30 @@ public class Pet {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Pet other = (Pet) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
 }

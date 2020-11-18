@@ -1,19 +1,25 @@
 package com.udacity.jdnd.course3.critter.entity;
 
-import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import org.hibernate.annotations.Type;
 
 @Entity
 public class Customer extends User {
     
+    @Column(length = 20)
     private String phoneNumber;
+
+    @Type(type = "nstring")
+    @Column(length = 500)
     private String notes;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Pet> pets;
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Pet> pets;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -31,11 +37,11 @@ public class Customer extends User {
         this.notes = notes;
     }
 
-    public List<Pet> getPets() {
+    public Set<Pet> getPets() {
         return pets;
     }
 
-    public void setPets(List<Pet> pets) {
+    public void setPets(Set<Pet> pets) {
         this.pets = pets;
     }
 }
