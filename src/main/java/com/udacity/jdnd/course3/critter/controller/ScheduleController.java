@@ -77,7 +77,7 @@ public class ScheduleController {
         Schedule schedule = new Schedule();
         BeanUtils.copyProperties(scheduleDTO, schedule);
         if (scheduleDTO.getEmployeeIds() != null) {
-            List<Employee> employeeList = userService.findAllByIdList(scheduleDTO.getEmployeeIds());
+            List<Employee> employeeList = userService.findAllEmployeesByIdList(scheduleDTO.getEmployeeIds());
             schedule.setEmployees(employeeList);
         }
 

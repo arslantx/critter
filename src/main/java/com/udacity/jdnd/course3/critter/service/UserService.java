@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.entity.Pet;
-import com.udacity.jdnd.course3.critter.entity.User;
 import com.udacity.jdnd.course3.critter.enums.EmployeeSkill;
-import com.udacity.jdnd.course3.critter.repository.UserRepository;
+import com.udacity.jdnd.course3.critter.repository.CustomerRepository;
+import com.udacity.jdnd.course3.critter.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,45 +20,66 @@ import org.springframework.stereotype.Service;
 public class UserService {
     
     @Autowired
-    UserRepository userRepository;
+    CustomerRepository customerRepository;
 
-    public <T extends User> List<T> findAllUsers() {
-        return (List<T>) userRepository.findAll();
+    @Autowired
+    EmployeeRepository employeeRepository;
+
+    public List<Customer> findAllCustomers() {
+        return customerRepository.findAll();
     }
 
-    public <T extends User> T save(T user) {
-        return userRepository.save(user);
+    public List<Employee> findAllEmployees() {
+        return employeeRepository.findAll();
     }
 
-    public <T extends User> T findById(Long id) {
-        Optional<User> optional = userRepository.findById(id);
-        if (optional.isPresent()) {
-            return (T) optional.get();
+    public Customer saveCustomer(Customer customer) {
+        return customerRepository.save(customer);
+    }
+
+    public Employee saveEmployee(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
+    public Customer findCustomerById(Long id) {
+        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+        if (optionalCustomer.isPresent()) {
+            return optionalCustomer.get();
+        } else {
+            return null;
         }
-        return null;
     }
 
-    public <T extends User> List<T> findAllByIdList(List<Long> idList) {
-        return (List<T>) userRepository.findAllById(idList);
+    public Employee findEmployeeById(Long id) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        if (optionalEmployee.isPresent()) {
+            return optionalEmployee.get();
+        } else {
+            return null;
+        }
+    }
+
+    public List<Employee> findAllEmployeesByIdList(List<Long> idList) {
+        return employeeRepository.findAllById(idList);
     }
 
     public void setEmployeeAvailability(Long employeeId, Set<DayOfWeek> daysAvailable) {
-        Employee employee = findById(employeeId);
+        Employee employee = findEmployeeById(employeeId);
         if (employee == null) {
             throw new UnsupportedOperationException("No employee found with id: " + employeeId);
         }
         employee.setDaysAvailable(daysAvailable);
-        save(employee);
+        saveEmployee(employee);
     }
 
     public List<Employee> findEmployeeForService(Set<EmployeeSkill> skills, LocalDate date) {
-        List<Employee> employees = userRepository.findByDaysAvailableContaining(date.getDayOfWeek());
+        List<Employee> employees = employeeRepository.findByDaysAvailableContaining(date.getDayOfWeek());
         return employees.stream()
                 .filter(e -> e.getSkills().containsAll(skills)).collect(Collectors.toList());
     }
 
     public Customer findCustomerByPet(Long petId) {
-        return userRepository.findByPetsId(petId);
+        return customerRepository.findByPetsId(petId);
     }
 
     public void addPetToCustomer(Pet pet, Customer customer) {
@@ -70,6 +91,6 @@ public class UserService {
             pets.add(pet);
         }
         customer.setPets(pets);
-        userRepository.save(customer);
+        saveCustomer(customer);
     }
 }

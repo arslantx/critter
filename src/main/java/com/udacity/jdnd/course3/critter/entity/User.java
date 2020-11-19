@@ -1,21 +1,20 @@
 package com.udacity.jdnd.course3.critter.entity;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.Type;
 
-@Entity
-// single table strategy is used to speed up polymorphic queries
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+// MappedSuperClass is used to keep tables separate
+// and keep id generation separate for employee and customer
+@MappedSuperclass
 public abstract class User {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     
     @Nationalized

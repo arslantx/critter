@@ -68,7 +68,7 @@ public class PetController {
         Pet pet = new Pet();
         BeanUtils.copyProperties(petDTO, pet);
         if (petDTO.getOwnerId() != 0L) {
-            Customer customer = userService.findById(petDTO.getOwnerId());
+            Customer customer = userService.findCustomerById(petDTO.getOwnerId());
             pet.setOwner(customer);
         }
         return pet;
